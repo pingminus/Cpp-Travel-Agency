@@ -1373,7 +1373,10 @@ public:
     ~TravelAgency() {
         // Clean up memory
         for (int i = 0; i < numEmployees; ++i) {
-            delete employees[i];
+            if (employees[i] != nullptr) {
+                delete employees[i];
+                employees[i] = nullptr; // Optional: Set to nullptr for safety
+            }
         }
     }
 
@@ -1389,12 +1392,13 @@ public:
     void removeEmployee(string& name) {
         int index = findEmployeeIndex(name);
         if (index != -1) {
-            delete employees[index];
+            delete employees[index]; // Deletes the employee object
             for (int i = index; i < numEmployees - 1; ++i) {
-                employees[i] = employees[i + 1];
+                employees[i] = employees[i + 1]; // Shifts pointers
             }
+            employees[numEmployees - 1] = nullptr; // Clear the last pointer
             --numEmployees;
-            cout << "Employee " << name << " removed." <<endl;
+            cout << "Employee " << name << " removed." << endl;
         } else {
             cout << "Employee " << name << " not found." << endl;
         }
